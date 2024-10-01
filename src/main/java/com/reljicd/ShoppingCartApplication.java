@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ShoppingCartApplication {
 
     public static void main(String[] args) {
-       
+       // wonder if this works with cmd closed
         SpringApplication.run(ShoppingCartApplication.class, args);
     }
 }
