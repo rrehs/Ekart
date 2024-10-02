@@ -8,7 +8,7 @@ public class ShoppingCartApplication {
 
     public static void main(String[] args) {
        
-       //removed bad code
+       
         SpringApplication.run(ShoppingCartApplication.class, args);
     }
 }
