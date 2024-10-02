@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout code from the repository
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Run your build commands
+                sh 'make build'  // Example for a Makefile project
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run your test commands
+                sh 'make test'  // Example for a Makefile project
+            }
+        }
+    }
+
+    post {
+        // Notify of failure or success
+        always {
+            junit '**/target/test-results/*.xml'  // Optional: Collect test results
+        }
+        failure {
+            mail to: 'dev-team@example.com',
+                subject: "Build Failed for ${env.BRANCH_NAME}",
+                body: "Build #${env.BUILD_NUMBER} failed. Check Jenkins for details."
+        }
+    }
+}
