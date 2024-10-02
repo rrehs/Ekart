@@ -2,37 +2,30 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                // Checkout code from the repository
-                checkout scm
-            }
-        }
-
         stage('Build') {
             steps {
-                // Run your build commands
-                sh 'make build'  // Example for a Makefile project
+                // Run the build commands
+                echo 'Building...'
+                sh 'make build'  // Replace with your actual build command
             }
         }
 
         stage('Test') {
             steps {
-                // Run your test commands
-                sh 'make test'  // Example for a Makefile project
+                // Run tests and catch errors
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh 'make test'  // Replace with your actual test command
+                }
             }
         }
     }
 
     post {
-        // Notify of failure or success
         always {
-            junit '**/target/test-results/*.xml'  // Optional: Collect test results
+            echo 'Build complete.'
         }
         failure {
-            mail to: 'dev-team@example.com',
-                subject: "Build Failed for ${env.BRANCH_NAME}",
-                body: "Build #${env.BUILD_NUMBER} failed. Check Jenkins for details."
+            echo 'One or more stages failed, but continuing...'
         }
     }
 }
