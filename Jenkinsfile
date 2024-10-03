@@ -31,7 +31,7 @@ pipeline {
             echo 'Build and test complete.'
             
             // Copy JUnit test results to the Downloads folder
-            bat 'copy target\\surefire-reports\\*.xml C:\Users\rrehs\Downloads'  // Adjust the path as necessary
+            bat 'copy target\\surefire-reports\\*.xml C:\\Users\\rrehs\\Downloads'  // Adjust the path as necessary
         }
         failure {
             echo 'One or more stages failed, but continuing...'
