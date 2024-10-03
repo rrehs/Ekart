@@ -12,7 +12,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building the project...'
-                bat 'mvn clean package'
+                sh 'mvn clean package'
             }
         }
 
@@ -20,7 +20,7 @@ pipeline {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     echo 'Running JUnit tests...'
-                    bat 'mvn test'
+                    sh 'mvn test'
                 }
             }
         }
@@ -29,9 +29,12 @@ pipeline {
     post {
         always {
             echo 'Build and test complete.'
+
+            // Archive JUnit test results
+            junit '**/target/surefire-reports/*.xml'
             
-            // Copy JUnit test results to the Downloads folder
-            bat 'copy target\\surefire-reports\\*.xml C:\\Users\\rrehs\\Downloads'  // Adjust the path as necessary
+            // Copy JUnit test results to Downloads folder on the host (assuming /home/user/jenkins is mounted)
+            sh 'cp target/surefire-reports/*.xml /var/jenkins_home/Downloads'
         }
         failure {
             echo 'One or more stages failed, but continuing...'
