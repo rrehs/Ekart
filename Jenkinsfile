@@ -2,19 +2,25 @@ pipeline {
     agent any
 
     stages {
+        stage('Checkout') {
+            steps {
+                echo 'Cloning repository...'
+                git branch: 'main', url: 'https://github.com/rrehs/Ekart.git'
+            }
+        }
+
         stage('Build') {
             steps {
-                // Run the build commands
-                echo 'Building...'
-                sh 'make build'  // Replace with your actual build command
+                echo 'Building the project...'
+                bat 'mvn clean package'
             }
         }
 
         stage('Test') {
             steps {
-                // Run tests and catch errors
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'make test'  // Replace with your actual test command
+                    echo 'Running JUnit tests...'
+                    bat 'mvn test'
                 }
             }
         }
@@ -22,7 +28,10 @@ pipeline {
 
     post {
         always {
-            echo 'Build complete.'
+            echo 'Build and test complete.'
+            
+            // Copy JUnit test results to the Downloads folder
+            bat 'copy target\\surefire-reports\\*.xml C:\Users\rrehs\Downloads'  // Adjust the path as necessary
         }
         failure {
             echo 'One or more stages failed, but continuing...'
