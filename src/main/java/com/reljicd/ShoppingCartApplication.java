@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ShoppingCartApplication {
 
     public static void main(String[] args) {
-        //testing pipeline
         SpringApplication.run(ShoppingCartApplication.class, args);
     }
 }
